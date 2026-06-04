@@ -33,17 +33,23 @@
                     </h5>
                 </div>
                 <div class="card-body">
+
                     @if(session('success'))
                         <div class="alert alert-success">
                             {{ session('success') }}
                         </div>
+                    @elseif(session('error'))
+                        <div class="alert alert-danger">
+                            {{ session('error') }}
+                        </div>
                     @endif
 
-                    <form action="{{ Route('tasks.store') }}" method="POST">
+                    <form action="{{ Route('tasks.update', $task->id) }}" method="POST">
                         @csrf
+                        @method('PUT')
                         <div class="mb-3">
                             <label for="title" class="form-label">Title</label>
-                            <input type="text" class="form-control" id="title" name="title" required>
+                            <input type="text" class="form-control" id="title" name="title" value="{{ old('title', $task->title) }}" required>
                             @error('title')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -53,7 +59,8 @@
                             <select class="form-select @error('assigned_to') is-invalid @enderror" id="assigned_to" name="assigned_to" required>
                                 <option value="">Select Employee</option>
                                 @foreach($employees as $employee)
-                                    <option value="{{ $employee->id }}">
+                                    <option value="{{ $employee->id }}" 
+                                        @if(old('assigned_to', $task->assigned_to) == $employee->id) selected @endif>
                                         {{ $employee->fullname }}
                                     </option>
                                 @endforeach
@@ -64,16 +71,16 @@
                         </div>
                         <div class="mb-3">
                             <label for="due_date" class="form-label">Due Date</label>
-                            <input type="date" class="form-control @error('due_date') is-invalid @enderror" id="due_date" value="{{ old('due_date', $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('Y-m-d') : '') }}" name="due_date" required>
-                            @error('due_date')
+                            <input type="date" class="form-control date @error('due_date') is-invalid @enderror" id="due_date" value="{{ old('due_date', $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('Y-m-d') : '') }}" name="due_date" required>
+                            @error('due_date') 
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                        </div>
+                        </div> 
                         <div class="mb-3">
                             <label for="status" class="form-label">Status</label>
                             <select class="form-select @error('status') is-invalid @enderror" id="status" name="status" required>
-                                <option value="pending">Pending</option>
-                                <option value="on progress">On Progress</option>
+                                <option value="pending" @if(old('status', $task->status) == 'pending') selected @endif>Pending</option>
+                                <option value="on progress" @if(old('status', $task->status) == 'on progress') selected @endif>On Progress</option>
                             </select>
                             @error('status')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -81,12 +88,12 @@
                         </div>
                         <div class="mb-3">
                             <label for="description" class="form-label">Description</label>
-                            <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" rows="3" required></textarea>
+                            <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" rows="3" required>{{ old('description', $task->description) }}</textarea>
                             @error('description')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-                        <button type="submit" class="btn btn-primary">Create Task</button>
+                        <button type="submit" class="btn btn-primary">Update Task</button>
                         <a href="{{ Route('tasks.index') }}" class="btn btn-secondary">Cancel</a>
                     </form> 
                 </div>
