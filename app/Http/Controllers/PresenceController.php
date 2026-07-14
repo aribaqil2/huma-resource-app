@@ -12,9 +12,12 @@ class PresenceController extends Controller
     public function index()
     {
         if (session('role') == 'HR') {
-            $presences = Presence::all();
+            $presences = Presence::with('employee')->latest()->get();
         } else {
-            $presences = Presence::where('employee_id', session('employee_id'))->get();
+            $presences = Presence::with('employee')
+                ->where('employee_id', session('employee_id'))
+                ->latest()
+                ->get();
         }
         return view('presences.index', compact('presences'));
     }
@@ -27,16 +30,16 @@ class PresenceController extends Controller
 
     public function store(Request $request)
     {
-        if(session('role') == 'HR') {
-        $request->validate([
-            'employee_id' => 'required',
-            'check_in' => 'required',
-            'check_out' => 'required',
-            'date' => 'required|date',
-            'status' => 'required|string',
-        ]);
+        if (session('role') == 'HR') {
+            $request->validate([
+                'employee_id' => 'required',
+                'check_in' => 'required',
+                'check_out' => 'required',
+                'date' => 'required|date',
+                'status' => 'required|string',
+            ]);
 
-        Presence::create($request->all());
+            Presence::create($request->all());
         } else {
             Presence::create([
                 'employee_id' => session('employee_id'),

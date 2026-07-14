@@ -40,7 +40,7 @@
                             </div>
                             <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                                 <h6 class="text-muted font-semibold">Employees</h6>
-                                <h6 class="font-extrabold mb-0">{{ $emplyee }}</h6>
+                                <h6 class="font-extrabold mb-0">{{ $employee }}</h6>
                             </div>
                         </div>
                     </div>
@@ -97,7 +97,7 @@
             <div class="col-12 ">
                 <div class="card">
                     <div class="card-header">
-                        <h4>Latest Tasks</h4>
+                        <h4>{{ session('role') == 'HR' ? 'All Latest Tasks' : 'My Latest Tasks' }}</h4>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">

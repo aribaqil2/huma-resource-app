@@ -23,6 +23,8 @@
         <link rel="stylesheet" href="{{ asset('mazer/dist/assets/extensions/@icon/dripicons/dripicons.css') }}">
         <link rel="stylesheet" href="{{ asset('mazer/dist/assets/compiled/css/ui-icons-dripicons.css') }}">
 
+        <link rel="stylesheet" href="{{ asset('mazer/dist/assets/extensions/dripicons/webfont/dripicons.css') }}">
+        <link rel="stylesheet" href="{{ asset('mazer/dist/assets/compiled/css/iconly.css') }}">
 </head>
 
 <body>
@@ -33,8 +35,17 @@
                 <div class="sidebar-header position-relative">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="logo">
-                            <a href="index.html"><img src="{{ asset('mazer/dist/assets/compiled/svg/logo.svg') }}"
-                                    alt="Logo" srcset=""></a>
+                            <a href="{{ url('/dashboard') }}" class="d-flex align-items-center text-decoration-none">
+                                <span class="dripicons-avatar me-2" style="font-size: 1.5rem; line-height: 1;">
+                                    <i class="bi bi-person-circle"></i> </span>
+
+                                <span class="font-bold fs-5 text-primary">
+                                    @php
+                                        $fullName = session('name') ?? (auth()->user()->name ?? 'Guest');
+                                    @endphp
+                                    {{ \Illuminate\Support\Str::words($fullName, 1, '') }}
+                                </span>
+                            </a>
                         </div>
                         <div class="theme-toggle d-flex gap-2  align-items-center mt-2">
                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -176,12 +187,13 @@
             <footer>
                 <div class="footer clearfix mb-0 text-muted">
                     <div class="float-start">
-                        <p>2023 &copy; Mazer</p>
+                        <p>{{ date('Y') }} &copy; <a href="{{ url('/dashboard') }}"
+                                class="font-bold text-decoration-none">Cereaktive</a>. v1.0.0</p>
                     </div>
-                    <div class="float-end">
-                        <p>Crafted with <span class="text-danger"><i class="bi bi-heart-fill icon-mid"></i></span>
-                            by <a href="https://saugi.me">Saugi</a></p>
-                    </div>
+                    {{-- <div class="float-end">
+                        <p>Made with passion <span class="text-danger"><i
+                                    class="bi bi-heart-fill icon-mid"></i></span></p>
+                    </div> --}}
                 </div>
             </footer>
         </div>
@@ -221,9 +233,9 @@
 
         var ctxBar = document.getElementById("presence").getContext("2d");
         var myBar = new Chart(ctxBar, {
-            type : "bar",
+            type: "bar",
             data: {
-                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
                 datasets: [{
                     label: 'Total',
                     data: [],
@@ -246,20 +258,18 @@
 
         });
 
-        function updateData(){
+        function updateData() {
             fetch('/dashboard/presence')
-            .then(response => response.json())
-            .then((output) => {
-                myBar.data.datasets = [
-                    {
+                .then(response => response.json())
+                .then((output) => {
+                    myBar.data.datasets = [{
                         label: 'Total',
                         data: output,
                         backgroundColor: 'rgba(63, 82, 227, 1)',
                         borderColor: '#57CAEB'
-                    }
-                ];
-                myBar.update();
-            });
+                    }];
+                    myBar.update();
+                });
         }
 
         updateData();

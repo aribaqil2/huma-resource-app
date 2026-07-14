@@ -56,7 +56,7 @@
                         <tbody>
                             @foreach ($presences as $presence)
                                 <tr>
-                                    <td>{{ $presence->employee->fullname }}</td>
+                                    <td>{{ $presence->employee?->fullname ?? 'Karyawan Tidak Ditemukan' }}</td>
                                     <td>{{ $presence->check_in }}</td>
                                     <td>{{ $presence->check_out }}</td>
                                     <td>{{ $presence->date }}</td>
