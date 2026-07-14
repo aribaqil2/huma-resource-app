@@ -11,14 +11,14 @@
         <div class="page-title">
             <div class="row">
                 <div class="col-12 col-md-6 order-md-1 order-last">
-                    <h3>Tasks</h3>
-                    <p class="text-subtitle text-muted">Handle employee Tasks</p>
+                    <h3>Presence</h3>
+                    <p class="text-subtitle text-muted">Manage presence records</p>
                 </div>
                 <div class="col-12 col-md-6 order-md-2 order-first">
                     <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
-                            <li class="breadcrumb-item " aria-current="page">Tasks</li>
+                            <li class="breadcrumb-item " aria-current="page">Presence</li>
                             <li class="breadcrumb-item active" aria-current="page">Index</li>
                         </ol>
                     </nav>
@@ -34,50 +34,45 @@
                 </div>
                 <div class="card-body">
                     <div class="d-flex">
-                        @if (session('role') == 'HR')
-                            <a href="{{ Route('tasks.create') }}" class="btn btn-primary mb-3 ms-auto">New Task</a>
-                        @endif
+                        <a href="{{ Route('presences.create') }}" class="btn btn-primary mb-3 ms-auto">New presence</a>
                     </div>
+
+                    @if (session('success'))
+                        <div class="alert alert-success">{{ session('success') }}</div>
+                    @endif
                     <table class="table table-striped" id="table1">
                         <thead>
                             <tr>
-                                <th>Title</th>
-                                <th>Assigned To</th>
-                                <th>Due Date</th>
+                                <th>Employee</th>
+                                <th>Check In</th>
+                                <th>Check Out</th>
+                                <th>Date</th>
                                 <th>Status</th>
-                                <th>Action</th>
+                                @if (session('role') == 'HR')
+                                    <th>Option</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($tasks as $task)
+                            @foreach ($presences as $presence)
                                 <tr>
-                                    <td>{{ $task->title }}</td>
-                                    <td>{{ $task->employee->fullname }}</td>
-                                    <td>{{ $task->due_date }}</td>
+                                    <td>{{ $presence->employee->fullname }}</td>
+                                    <td>{{ $presence->check_in }}</td>
+                                    <td>{{ $presence->check_out }}</td>
+                                    <td>{{ $presence->date }}</td>
                                     <td>
-                                        @if ($task->status == 'pending')
-                                            <span class="text-warning">Pending</span>
-                                        @elseif($task->status == 'done')
-                                            <span class="text-success">Done</span>
+                                        @if ($presence->status == 'present')
+                                            <span class="text-success">Present</span>
                                         @else
-                                            <span class="text-info">{{ $task->status }}</span>
+                                            <span class="text-danger">{{ ucfirst($presence->status) }}</span>
                                         @endif
                                     </td>
                                     <td>
-                                        <a href="{{ route('tasks.show', $task->id) }}" class="btn btn-info btn-sm">View</a>
-
-                                        @if ($task->status == 'pending')
-                                            <a href="{{ route('tasks.done', $task->id) }}"
-                                                class="btn btn-success btn-sm">Mark as Done</a>
-                                        @else
-                                            <a href="{{ route('tasks.pending', $task->id) }}"
-                                                class="btn btn-warning btn-sm">Mark as Pending</a>
-                                        @endif
-
                                         @if (session('role') == 'HR')
-                                            <a href="{{ route('tasks.edit', $task->id) }}"
+                                            <a href="{{ route('presences.edit', $presence->id) }}"
                                                 class="btn btn-warning btn-sm">Edit</a>
-                                            <form action="{{ route('tasks.destroy', $task->id) }}" method="POST"
+
+                                            <form action="{{ route('presences.destroy', $presence->id) }}" method="POST"
                                                 style="display: inline">
                                                 @csrf
                                                 @method('DELETE')

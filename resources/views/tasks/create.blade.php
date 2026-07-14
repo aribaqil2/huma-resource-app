@@ -19,7 +19,7 @@
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
                             <li class="breadcrumb-item " aria-current="page">Tasks</li>
-                            <li class="breadcrumb-item active" aria-current="page">Index</li>
+                            <li class="breadcrumb-item active" aria-current="page">New</li>
                         </ol>
                     </nav>
                 </div>
@@ -64,7 +64,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="due_date" class="form-label">Due Date</label>
-                            <input type="date" class="form-control @error('due_date') is-invalid @enderror" id="due_date" value="{{ old('due_date', $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('Y-m-d') : '') }}" name="due_date" required>
+                            <input type="date" class="form-control @error('due_date') is-invalid @enderror" id="due_date" value="{{ old('due_date') }}" name="due_date" required>
                             @error('due_date')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
