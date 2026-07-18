@@ -64,7 +64,7 @@ class DashboardController extends Controller
             $data = Presence::where('status', 'present')
                 ->whereYear('date', date('Y'))
                 ->selectRaw('EXTRACT(MONTH FROM date) as month, COUNT(*) as total_present')
-                ->groupBy('month')
+                ->groupByRaw('EXTRACT(MONTH FROM date)')
                 ->pluck('total_present', 'month');
         } else {
             // Jika Karyawan Biasa: Hanya hitung absensi milik 'employee_id' yang sedang login
@@ -72,14 +72,14 @@ class DashboardController extends Controller
                 ->whereYear('date', date('Y'))
                 ->where('employee_id', session('employee_id'))
                 ->selectRaw('EXTRACT(MONTH FROM date) as month, COUNT(*) as total_present')
-                ->groupBy('month')
+                ->groupByRaw('EXTRACT(MONTH FROM date)')
                 ->pluck('total_present', 'month');
         }
 
         // 2. Mapping Data ke Array untuk Chart.js (Ubah batas ke 12 untuk Januari - Desember)
         $monthlyData = [];
         for ($month = 1; $month <= 12; $month++) {
-            $monthlyData[] = $data->get($month, 0);
+            $monthlyData[] = (int) $data->get($month, 0);
         }
 
         // 3. Kembalikan data dalam bentuk JSON bersih ke JavaScript Fetch
