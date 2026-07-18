@@ -211,7 +211,7 @@
     <script src="{{ asset('mazer/dist/assets/static/js/pages/dashboard.js') }}"></script>
 
     <!-- Need: ChartJS -->
-    <script src="{{ asset('mazer/dist/assets/extensions/chart.js/Chart.umd.js') }}"></script>
+    <script src="{{ asset('mazer/dist/assets/extensions/chart.js/chart.umd.js') }}"></script>
 
 
     {{-- dibuthkan untuk handle datatable --}}
