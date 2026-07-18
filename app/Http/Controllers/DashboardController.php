@@ -63,7 +63,7 @@ class DashboardController extends Controller
             // Jika HR: Hitung absensi 'present' dari SELURUH karyawan pada tahun ini
             $data = Presence::where('status', 'present')
                 ->whereYear('date', date('Y'))
-                ->selectRaw('EXTRACT(MONTH FROM date) as month, COUNT(*) as total_present')
+                ->selectRaw('(EXTRACT(MONTH FROM date))::int as month, COUNT(*) as total_present')
                 ->groupByRaw('EXTRACT(MONTH FROM date)')
                 ->pluck('total_present', 'month');
         } else {
@@ -71,7 +71,7 @@ class DashboardController extends Controller
             $data = Presence::where('status', 'present')
                 ->whereYear('date', date('Y'))
                 ->where('employee_id', session('employee_id'))
-                ->selectRaw('EXTRACT(MONTH FROM date) as month, COUNT(*) as total_present')
+                ->selectRaw('(EXTRACT(MONTH FROM date))::int as month, COUNT(*) as total_present')
                 ->groupByRaw('EXTRACT(MONTH FROM date)')
                 ->pluck('total_present', 'month');
         }
